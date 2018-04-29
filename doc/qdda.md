@@ -1,5 +1,3 @@
-Content-type: text/html
-
 <HTML><HEAD><TITLE>Manpage of qdda</TITLE>
 </HEAD><BODY>
 <H1>qdda</H1>
