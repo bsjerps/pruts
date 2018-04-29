@@ -1,5 +1,5 @@
-{::nomarkdown}
-<HTML><HEAD><TITLE>Manpage of qdda</TITLE>
+<HTML><HEAD>
+QDDA
 </HEAD><BODY>
 <H1>qdda</H1>
 Section: QDDA User Manual (1)<BR>Updated: 2018-03-24<BR><A HREF="#index">Index</A>
@@ -19,7 +19,6 @@ qdda - the quick &amp; dirty dedupe analyzer
 <H2>DESCRIPTION</H2>
 
 <B>qdda</B>
-
 checks files, data streams or block devices for duplicate blocks to estimate deduplication
 efficiency on dedupe capable storage systems, using key-value stores in SQLite,
 MD5 hashing and LZ4 compression.  It also estimates compression ratios for all-flash arrays
