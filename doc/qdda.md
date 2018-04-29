@@ -3,7 +3,7 @@
 </HEAD><BODY>
 <H1>qdda</H1>
 Section: QDDA User Manual (1)<BR>Updated: 2018-03-24<BR><A HREF="#index">Index</A>
-<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+<A HREF="https://linux.die.net/man/1/man2html">Return to Main Contents</A><HR>
 
 <A NAME="lbAB">&nbsp;</A>
 <H2>NAME</H2>
@@ -784,7 +784,7 @@ setfacl -m u:&lt;user&gt;:r /dev/&lt;disk&gt;
 <BR>
 
 This gives &lt;user&gt; read-only access without altering any of the existing ownerships/permissions. The permissions will 
-typically be reset at next reboot or through <A HREF="/cgi-bin/man/man2html?7+udev">udev</A>(7).
+typically be reset at next reboot or through <A HREF="https://linux.die.net/man/1/man2html?7+udev">udev</A>(7).
 You need to have ACL enabled on the file system containing /dev/ and the setfacl tool installed.
 <P>
 <A NAME="lbAR">&nbsp;</A>
@@ -831,7 +831,7 @@ Dumping multiple devices to a single pipe (i.e. cat /dev/sda /dev/sdb | qdda) ma
 <A NAME="lbAT">&nbsp;</A>
 <H2>SEE ALSO</H2>
 
-<A HREF="/cgi-bin/man/man2html?1+lz4">lz4</A>(1), <A HREF="/cgi-bin/man/man2html?1+md5">md5</A>(1), <A HREF="/cgi-bin/man/man2html?1+sqlite3">sqlite3</A>(1), <A HREF="/cgi-bin/man/man2html?1+mkfifo">mkfifo</A>(1), <A HREF="/cgi-bin/man/man2html?1+nc">nc</A>(1), <A HREF="/cgi-bin/man/man2html?7+udev">udev</A>(7), <A HREF="/cgi-bin/man/man2html?1+setfacl">setfacl</A>(1)
+<A HREF="https://linux.die.net/man/1/man2html?1+lz4">lz4</A>(1), <A HREF="/cgi-bin/man/man2html?1+md5">md5</A>(1), <A HREF="/cgi-bin/man/man2html?1+sqlite3">sqlite3</A>(1), <A HREF="/cgi-bin/man/man2html?1+mkfifo">mkfifo</A>(1), <A HREF="/cgi-bin/man/man2html?1+nc">nc</A>(1), <A HREF="/cgi-bin/man/man2html?7+udev">udev</A>(7), <A HREF="/cgi-bin/man/man2html?1+setfacl">setfacl</A>(1)
 <P>
 <A NAME="lbAU">&nbsp;</A>
 <H2>AUTHOR</H2>
@@ -888,8 +888,8 @@ responsible for any problems you may encounter with this software.
 </DL>
 <HR>
 This document was created by
-<A HREF="/cgi-bin/man/man2html">man2html</A>,
+<A HREF="https://linux.die.net/man/1/man2html">man2html</A>,
 using the manual pages.<BR>
-Time: 10:03:55 GMT, April 29, 2018
+Time: 10:08:18 GMT, April 29, 2018
 </BODY>
 </HTML>
