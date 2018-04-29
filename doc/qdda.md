@@ -187,6 +187,7 @@ compressible data with 4 copies each.
 Currently qdda supports 3 storage arrays:
 <BR>
 
+
 <DL COMPACT>
 <DT>XtremIO&nbsp;X1&nbsp;(--array=x1)<DD>
 The first generation XtremIO with 8KB block size and compression bucket sizes 2K, 4K, 8K. As XtremIO performs all compression and dedupe
@@ -209,16 +210,16 @@ available at initial configuration and VMAX changes the compression layout dynam
 for up to 20% of all data, based on workload and data profile. This makes it hard for qdda to give reasonable estimates which is why
 it is marked as EXPERIMENTAL for now. The output of qdda shows the results at most ideal circumstances (all data gets deduped and
 compressed always). Future versions may improve on accuracy.
-
-The compress and hash algorithms are slightly different from these actual arrays
-and the results are a (close) approximation of the real array data reduction.
-Currently qdda only uses LZ4 (default) compression,
-
 <DT>custom&nbsp;(--array=&lt;custom&nbsp;definition&gt;)<DD>
-Specify a string with array=name=&lt;name&gt;,bs=&lt;blocksize_kb&gt;,buckets=&lt;bucketsize1+bucketsize2....&gt;
+Specify a string with array=name=&lt;name&gt;,bs=&lt;blocksize_kb&gt;,buckets=&lt;size1+size2....&gt;
 <BR>
 
 example: qdda --array=name=foo,bs=64,buckets=8+16+32+48+64
+
+The compress and hash algorithms are slightly different from these actual arrays
+and the results are a (close) approximation of the real array data reduction.
+Currently qdda only uses LZ4 (default) compression.
+
 </DL>
 <A NAME="lbAH">&nbsp;</A>
 <H2>ERRORS</H2>
@@ -226,6 +227,9 @@ example: qdda --array=name=foo,bs=64,buckets=8+16+32+48+64
 <B>qdda</B>
 
 has basic error handling. Most errors result in simply aborting with an error message and return code.
+<BR>
+
+Currently aborting qdda with ctrl-c may result in database corruption.
 <P>
 <A NAME="lbAI">&nbsp;</A>
 <H2>EXAMPLE</H2>
@@ -457,8 +461,11 @@ We can verify the MD5 hash:
 
 dd bs=16K status=none count=1 if=/dev/sda skip=181 | md5sum 
 
+<PRE>
 92ab673d915a94dcf187720e8ac0d608  -
-<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|-------------|&nbsp;--&gt;&nbsp;Note&nbsp;that&nbsp;the&nbsp;last&nbsp;15&nbsp;hex&nbsp;digits&nbsp;(equal&nbsp;to&nbsp;60&nbsp;bits)&nbsp;match&nbsp;the&nbsp;hexadecimal&nbsp;hash&nbsp;value&nbsp;in&nbsp;the&nbsp;database.
+                 |-------------| --&gt; Note that the last 15 hex digits (equal to 60 bits) match the hexadecimal hash value in the database.
+</PRE>
+
 <P>
 </DL>
 <A NAME="lbAJ">&nbsp;</A>
@@ -492,7 +499,7 @@ using block sizes larger than 64K). The database also stores the rowid which is 
 gets about 7 bytes per row.
 <BR>
 
-So the amount of bytes per row equals <A HREF="http://localhost/cgi-bin/man/man2html?7+b-tree">b-tree</A>(7) + <A HREF="http://localhost/cgi-bin/man/man2html?4+rowid">rowid</A>(4) + <A HREF="http://localhost/cgi-bin/man/man2html?8+hash">hash</A>(8) + val (2) = 21
+So the amount of bytes per row equals b-tree (7) + rowid (4) + hash (8) + val (2) = 21
 <BR>
 
 Scanning a terabyte disk at 16K blocksize requires 67,108,864 rows. The database capacity required for
@@ -507,16 +514,13 @@ the size or 0.22% for both databases, however, SQLite also creates hidden tempor
 Sizing summary for a 1TiB random dataset:
 <BR>
 
+<PRE>
 Primary database - 1400MiB (will be smaller if the data has zero blocks or can be deduped)
-<BR>
-
 Staging database - 1400MiB (deleted after merging)
-<BR>
-
 Temp tables      - 2800MiB (hidden, deleted after merging)
-<BR>
-
 Total            - 5600MiB (file system free space required, or 0.56%)
+</PRE>
+
 
 A (very) safe assumption for reserved space for qdda is 1% of data size for a blocksize of 16kb.
 <BR>
@@ -562,8 +566,8 @@ will be limited to those threads.
 
 <B>qdda</B>
 
-allocates a number of read buffers which are 1 MiB each. The amount of buffers is set to #workers + #readers + 8. So on a
-system with 8 cores reading 2 files, the amount of buffers = 2 + 8 + 8 = 18 MiB.
+allocates a number of read buffers which are 1 MiB each. The amount of buffers is set to #workers + #readers + 32. So on a
+system with 8 cores reading 2 files, the amount of buffers = 2 + 8 + 32 = 42 MiB.
 <BR>
 
 qdda also requires additional memory for SQLite, etc. but the total required memory usually fits in less than 100MiB.
@@ -645,7 +649,7 @@ Therefore qdda only uses the 7.5 least significant bytes (60 bits) of the MD5 ha
 The number of rows with a 50% chance of a hash collision is roughly
 <BR>
 
-<B>rows = 0.5 + sqrt(0.25 + 2 * <A HREF="http://localhost/cgi-bin/man/man2html?2+ln">ln</A>(2) * 2^bits)</B>
+<B>rows = 0.5 + sqrt(0.25 + 2 * ln (2) * 2^bits)</B>
 
 <BR>
 
@@ -672,8 +676,6 @@ data but keep frequently accessed data in uncompressed storage pools.
 <BR>
 
 Some arrays do post-processing which also results in not all data being compressed or deduped all the time.
-<BR>
-
 <B>qdda</B>
 
 currently ignores these effects and produces results for all data as if it was compressed and deduped immediately (inline).
@@ -693,11 +695,14 @@ a rough idea of your system's capabilities by running the --cputest option which
 
 
 
+<PRE>
 *** Synthetic performance test, 1 thread ***
 Initializing:          65536 blocks, 16k (1024 MiB)
 Hashing:             1799584 usec,     596.66 MB/s,    36417.30 rows/s
 Compressing:         2412561 usec,     445.06 MB/s,    27164.49 rows/s
 DB insert:             52301 usec,   20530.04 MB/s,  1253054.38 rows/s
+</PRE>
+
 
 
 
@@ -707,7 +712,7 @@ Note that the compress rate is inaccurate but repeatable. A real dataset is usua
 
 A data scan by default will allocate 1 thread per file, 1 thread for database updates and the number of worker threads equal to the
 amount of cpu cures. Experience shows that the bottleneck is usually read IO bandwidth until the database updater is maxed out (on a 
-fast reference system this happened at about 3000MB/s). Future versions may use multiple updater threads to avoid this bottleneck.
+fast reference system this happened at about 7000MB/s). Future versions may use multiple updater threads to avoid this bottleneck.
 
 After data scan the staging data has to be merged with the primary database. This is done by joining existing data with staging data
 and running an 'insert or replace' job in SQLite. Testing the speed can be done with the --dbtest option. Output of a merge of
@@ -716,7 +721,10 @@ and running an 'insert or replace' job in SQLite. Testing the speed can be done 
 
 
 
+<PRE>
 Merging 67108864 blocks (1048576 MiB) with 0 blocks (0 MiB) in 157.28 sec (426686 blocks/s, 6666 MiB/s)
+</PRE>
+
 
 
 
@@ -883,6 +891,6 @@ responsible for any problems you may encounter with this software.
 This document was created by
 <A HREF="http://localhost/cgi-bin/man/man2html">man2html</A>,
 using the manual pages.<BR>
-Time: 07:42:34 GMT, April 29, 2018
+Time: 09:06:36 GMT, April 29, 2018
 </BODY>
 </HTML>
