@@ -1,3 +1,4 @@
+{::nomarkdown}
 <HTML><HEAD><TITLE>Manpage of qdda</TITLE>
 </HEAD><BODY>
 <H1>qdda</H1>
@@ -892,3 +893,4 @@ using the manual pages.<BR>
 Time: 09:06:36 GMT, April 29, 2018
 </BODY>
 </HTML>
+{:/}
