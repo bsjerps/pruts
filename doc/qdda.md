@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<HTML><HEAD><TITLE>Man page of qdda</TITLE>
+<HTML><HEAD>
 </HEAD><BODY>
 <H1>qdda</H1>
 Section: QDDA User Manual (1)<BR>Updated: 2018-03-24<BR><A HREF="#index">Index</A>
@@ -890,6 +890,6 @@ responsible for any problems you may encounter with this software.
 This document was created by
 <A HREF="/cgi-bin/man/man2html">man2html</A>,
 using the manual pages.<BR>
-Time: 09:45:32 GMT, April 29, 2018
+Time: 10:03:55 GMT, April 29, 2018
 </BODY>
 </HTML>
